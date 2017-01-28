@@ -31,8 +31,10 @@ while(True):
         time_on = time.time()
         last_status = True
     elif len(faces) > 0 and last_status == True:
-        if time.time() - time_on > 1 and light_status == False:
-            r = requests.post('http://192.168.2.41:3456/wemo', data = json.dumps({'state':'on'}), headers={'Content-Type': 'application/json'})
+        if time.time() - time_on > 0.5 and light_status == False:
+            requests.post('http://192.168.2.41:3456/wemo', data = json.dumps({'state':'on'}), headers={'Content-Type': 'application/json'})
+            requests.put('http://192.168.2.13/api/newdeveloper/groups/0/action', data = json.dumps({'on':True}), headers={'Content-Type': 'application/json'})
+
             print "lights on"
             time_on = 0
             light_status = True
@@ -41,7 +43,8 @@ while(True):
         last_status = False
     else:
         if time.time() - time_off > 3 and light_status == True:
-            r = requests.post('http://192.168.2.41:3456/wemo', data = json.dumps({'state':'off'}), headers={'Content-Type': 'application/json'})
+            requests.post('http://192.168.2.41:3456/wemo', data = json.dumps({'state':'off'}), headers={'Content-Type': 'application/json'})
+            requests.put('http://192.168.2.13/api/newdeveloper/groups/0/action', data = json.dumps({'on':False}), headers={'Content-Type': 'application/json'})
             print "lights off"
             time_off = 0
             light_status = False
